@@ -7,8 +7,9 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/sourabh-go/bookings/pkg/config" // Ensure config package is imported correctly
-	"github.com/sourabh-go/bookings/pkg/models"
+	"github.com/justinas/nosurf"
+	"github.com/sourabh-go/bookings/internal/config" // Ensure config package is imported correctly
+	"github.com/sourabh-go/bookings/internal/models"
 )
 
 var app *config.AppConfig // Ensure correct struct name capitalization
@@ -18,7 +19,12 @@ func NewTemplates(a *config.AppConfig) {
 	app = a
 }
 
-func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData) {
+func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.CSRFToken = nosurf.Token(r)
+	return td
+}
+
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *models.TemplateData) {
 	var tc map[string]*template.Template
 	if app.UseCache {
 		// get the template Cache from app config
@@ -36,6 +42,8 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, td *models.TemplateData)
 	}
 
 	buf := new(bytes.Buffer)
+
+	td = AddDefaultData(td, r)
 
 	// Execute template and check for errors immediately
 	err := t.Execute(buf, td)

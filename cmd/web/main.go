@@ -6,11 +6,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/sourabh-go/bookings/pkg/config"
+	"github.com/sourabh-go/bookings/internal/config"
 
 	"github.com/alexedwards/scs/v2"
-	"github.com/sourabh-go/bookings/pkg/handlers"
-	"github.com/sourabh-go/bookings/pkg/render"
+	"github.com/sourabh-go/bookings/internal/handlers"
+	"github.com/sourabh-go/bookings/internal/render"
 )
 
 const portNumber = ":8080"
